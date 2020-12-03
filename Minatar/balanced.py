@@ -1,5 +1,5 @@
 #sample call:
-#python balanced_Q_learning.py -g 'game' -v
+#python balanced.py -g 'game' -v
 #'game' can be breakout/space_invaders/asterix/seaquest or freeway
 ##############################################################################################################
 import torch
