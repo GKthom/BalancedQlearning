@@ -11,6 +11,8 @@ For the simple MDP environment, install numpy, matplotlib
 
 MinAtar:python balanced.py -g 'game' -v
 
+'game' can be breakout,space_invaders,asterix,seaquest or freeway
+
 Simple MDP: python balanced.py
 
 ## Authors
