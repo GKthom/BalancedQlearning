@@ -213,16 +213,25 @@ def train_balanced(sample, policy_net, target_net, optimizer,old_targ_net,old_po
     #use max and min terms to find beta
     beta=findbeta(old_targ_net,old_policy_net,target_net,policy_net,states,actions,rewards,next_states,betamean,t)
     # Compute the balanced target
+    #print('Beta is:')
+    #print(beta)
+    #time.sleep(3)
+    #print('Q_prime is:')
+    #print(Q_s_prime_a_prime_max)
+    #time.sleep(3)
+    #print(beta*Q_s_prime_a_prime_max)
+    #time.sleep(10)
     target = rewards + GAMMA * ((beta* Q_s_prime_a_prime_max)+((1-beta)* Q_s_prime_a_prime_min))
     # Huber loss
     #loss = f.smooth_l1_loss(target, Qnorm)
     loss = f.smooth_l1_loss(target, Q_s_a)
+
     # Zero gradients, backprop, update the weights of policy_net
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
     meanbeta_batch=torch.mean(beta.detach())
-    betamean=((betamean*t)+meanbeta_batch)/(t+1)#update the mean beta
+    betamean=((betamean*t)+meanbeta_batch)/(t+1)
     return betamean
 
 
@@ -391,6 +400,8 @@ def balanced_dqn(run_no, env, replay_off, target_off, output_file_name, store_in
                 else:
                     policy_net_update_counter += 1
                     betamean=train_balanced(sample, policy_net, target_net, optimizer, old_targ_net,old_policy_net,t,betamean)
+            #print('trainingloop')
+            #print(beta)
             # Update the target network only after some number of policy network updates
             if not target_off and policy_net_update_counter > 0 and policy_net_update_counter % TARGET_NETWORK_UPDATE_FREQ == 0:
                 target_net.load_state_dict(policy_net.state_dict())
@@ -408,6 +419,7 @@ def balanced_dqn(run_no, env, replay_off, target_off, output_file_name, store_in
 
         # Increment the episodes
         e += 1
+        #print(e)
 
         # Save the return for each episode
         data_return.append(G)
